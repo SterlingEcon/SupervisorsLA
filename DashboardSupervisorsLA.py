@@ -6,6 +6,7 @@ import glob
 import os
 import re
 import matplotlib.pyplot as plt
+import tarfile
 
 st.set_page_config(page_title="Top Companies Hiring Supervisors - LA County", layout="wide")
 st.title("📊 Top Employers and Industries Hiring First-Line Supervisors in Los Angeles County")
@@ -28,8 +29,6 @@ if uploaded_file is None:
         uploaded_file.seek(0)
 
 if uploaded_file is not None:
-    import tarfile
-
     with tarfile.open(fileobj=uploaded_file, mode="r:gz") as tar:
         members = [m for m in tar.getmembers() if m.isfile() and m.name.endswith(".csv")]
         company_data = []
@@ -77,7 +76,7 @@ if uploaded_file is not None:
 
             st.markdown(f"### 📌 {selected_occ}")
 
-            col1, col2 = st.columns([2, 3])
+            col1, col2 = st.columns([3, 2])
 
             # Show employers
             matching_company_dfs = [df for df in company_data if df['Occupation'].iloc[0] == selected_occ]
@@ -89,18 +88,18 @@ if uploaded_file is not None:
                     top_companies = top_companies.sort_values("Unique Postings", ascending=False)
 
                     with col1:
-                        st.subheader("🏢 Top Companies")
-                        fmt_df = top_companies.copy()
-                        fmt_df['Unique Postings'] = fmt_df['Unique Postings'].round(0).astype(int).map("{:,}".format)
-                        st.dataframe(fmt_df, use_container_width=True)
-
-                    with col2:
                         st.subheader("📉 Unique Postings by Company")
                         fig, ax = plt.subplots(figsize=(10, 6))
                         ax.barh(top_companies[company_col], top_companies['Unique Postings'])
                         ax.invert_yaxis()
                         ax.set_xlabel("Unique Postings")
                         st.pyplot(fig)
+
+                    with col2:
+                        st.subheader("🏢 Top Companies")
+                        fmt_df = top_companies.copy()
+                        fmt_df['Unique Postings'] = fmt_df['Unique Postings'].round(0).astype(int).map("{:,}".format)
+                        st.dataframe(fmt_df, use_container_width=True)
 
             # Show industries
             matching_industry_dfs = [df for df in industry_data if df['Occupation'].iloc[0] == selected_occ]
