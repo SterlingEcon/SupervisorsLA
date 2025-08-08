@@ -4,6 +4,7 @@ import zipfile
 import io
 import glob
 import os
+import re
 
 st.set_page_config(page_title="Top Companies Hiring Supervisors - LA County", layout="wide")
 st.title("📊 Top Employers and Industries Hiring First-Line Supervisors in Los Angeles County")
@@ -11,7 +12,6 @@ st.markdown("""
 This dashboard shows job postings from **August 2024 to July 2025** for top companies and industries hiring across different supervisor occupations in Los Angeles County.
 """)
 
-# --- Load the zip archive ---
 uploaded_file = st.file_uploader("Upload the tar.gz file from Lightcast:", type=["tar.gz"])
 
 if uploaded_file is not None:
@@ -34,11 +34,12 @@ if uploaded_file is not None:
 
                 # Normalize occupation name from filename
                 occupation = base_name
-                occupation = occupation.replace('_in_Los_Angeles_County_CA', '')
-                occupation = occupation.replace('_Company', '').replace('_company', '').replace('_COMPANY', '')
-                occupation = occupation.replace('_Industry', '').replace('_industry', '').replace('_INDUSTRY', '')
-                occupation_parts = [part for part in occupation.split('_') if not (len(part) > 12 and part.isalnum())]
-                occupation = ' '.join(occupation_parts).strip()
+                occupation = re.sub(r'(_)?in_Los_Angeles_County_CA', '', occupation)
+                occupation = re.sub(r'(_)?(Company|Industry|company|industry|COMPANY|INDUSTRY)', '', occupation)
+                occupation = re.sub(r'(_)?[a-f0-9]{16,}', '', occupation)  # remove hashes
+                occupation = occupation.replace('_', ' ').strip()
+                occupation = re.sub(r'\s+', ' ', occupation)
+                occupation = occupation.replace('LA', '').strip()
                 df['Occupation'] = occupation
 
                 # Normalize column names
@@ -47,7 +48,6 @@ if uploaded_file is not None:
                     if col.lower().startswith("unique postings"):
                         df.rename(columns={col: "Unique Postings"}, inplace=True)
 
-                # Check for presence of key columns
                 has_company = any(col.strip().lower() == "company" for col in df.columns)
                 has_industry = any(col.strip().lower() == "industry" for col in df.columns)
 
