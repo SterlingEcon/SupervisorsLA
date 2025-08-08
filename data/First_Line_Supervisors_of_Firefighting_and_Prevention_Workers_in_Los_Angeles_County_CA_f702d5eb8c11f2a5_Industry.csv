@@ -1,0 +1,93 @@
+NAICS,Industry,"Occupation Jobs in Industry (2024)","Occupation Jobs in Industry (2029)","Change (2024 - 2029)","% Change (2024 - 2029)","% of Occupation in Industry (2024)","% of Total Jobs in Industry (2024)"
+903,"Local Government",1796.32283396,1907.98384816,111.661014196,0.0621608833809,0.961784370004,0.00385812185249
+561,"Administrative and Support Services",43.4950108714,46.9836643875,3.4886535161,0.0802081306846,0.0232880308809,0.000143476063364
+901,"Federal Government",10.0995777666,10.3154387742,0.21586100762,0.0213732705079,0.00540750017529,0.000156341234865
+902,"State Government",5.47417198144,6.16106282073,0.686890839294,0.125478490925,0.00293097262414,5.49841394146E-5
+488,"Support Activities for Transportation",3.17016812594,3.32712744079,0.156959314848,0.0495113535348,0.00169736647343,5.51640309529E-5
+336,"Transportation Equipment Manufacturing",3.01093065994,3.40410698539,0.393176325451,0.130582989068,0.00161210779775,4.86961421295E-5
+624,"Social Assistance",1.92510603466,2.16814223975,0.2430362051,0.126245620098,0.00103073727045,5.26581554743E-6
+621,"Ambulatory Health Care Services",1.3408529561,1.25457285499,-0.0862801011167,-0.0643471759704,0.000717917398405,4.57090671467E-6
+562,"Waste Management and Remediation Services",1.20487022945,1.32109647759,0.116226248147,0.0964637064696,0.000645109738993,7.84571794199E-5
+623,"Nursing and Residential Care Facilities",0.992327451068,0.931280895312,-0.0610465557563,-0.0615185599175,0.000531310416101,1.02081831086E-5
+813,"Religious, Grantmaking, Civic, Professional, and Similar Organizations",0.662243198167,0.580271227894,-0.0819719702721,-0.123779255867,0.00035457722025,9.42331624393E-6
+111,"Crop Production",0,0,0,0,0,0
+112,"Animal Production and Aquaculture",0,0,0,0,0,0
+113,"Forestry and Logging",0,0,0,0,0,0
+114,"Fishing, Hunting and Trapping",0,0,0,0,0,0
+115,"Support Activities for Agriculture and Forestry",0,0,0,0,0,0
+211,"Oil and Gas Extraction",0,0,0,0,0,0
+212,"Mining (except Oil and Gas)",0,0,0,0,0,0
+213,"Support Activities for Mining",0,0,0,0,0,0
+221,Utilities,0,0,0,0,0,0
+236,"Construction of Buildings",0,0,0,0,0,0
+237,"Heavy and Civil Engineering Construction",0,0,0,0,0,0
+238,"Specialty Trade Contractors",0,0,0,0,0,0
+311,"Food Manufacturing",0,0,0,0,0,0
+312,"Beverage and Tobacco Product Manufacturing",0,0,0,0,0,0
+313,"Textile Mills",0,0,0,0,0,0
+314,"Textile Product Mills",0,0,0,0,0,0
+315,"Apparel Manufacturing",0,0,0,0,0,0
+316,"Leather and Allied Product Manufacturing",0,0,0,0,0,0
+321,"Wood Product Manufacturing",0,0,0,0,0,0
+322,"Paper Manufacturing",0,0,0,0,0,0
+323,"Printing and Related Support Activities",0,0,0,0,0,0
+324,"Petroleum and Coal Products Manufacturing",0,0,0,0,0,0
+325,"Chemical Manufacturing",0,0,0,0,0,0
+326,"Plastics and Rubber Products Manufacturing",0,0,0,0,0,0
+327,"Nonmetallic Mineral Product Manufacturing",0,0,0,0,0,0
+331,"Primary Metal Manufacturing",0,0,0,0,0,0
+332,"Fabricated Metal Product Manufacturing",0,0,0,0,0,0
+333,"Machinery Manufacturing",0,0,0,0,0,0
+334,"Computer and Electronic Product Manufacturing",0,0,0,0,0,0
+335,"Electrical Equipment, Appliance, and Component Manufacturing",0,0,0,0,0,0
+337,"Furniture and Related Product Manufacturing",0,0,0,0,0,0
+339,"Miscellaneous Manufacturing",0,0,0,0,0,0
+423,"Merchant Wholesalers, Durable Goods",0,0,0,0,0,0
+424,"Merchant Wholesalers, Nondurable Goods",0,0,0,0,0,0
+425,"Wholesale Electronic Markets and Agents and Brokers",0,0,0,0,0,0
+441,"Motor Vehicle and Parts Dealers",0,0,0,0,0,0
+444,"Building Material and Garden Equipment and Supplies Dealers",0,0,0,0,0,0
+445,"Food and Beverage Stores",0,0,0,0,0,0
+449,"Furniture, Home Furnishings, Electronics, and Appliance Retailers",0,0,0,0,0,0
+455,"General Merchandise Retailers",0,0,0,0,0,0
+456,"Health and Personal Care Retailers",0,0,0,0,0,0
+457,"Gasoline Stations and Fuel Dealers",0,0,0,0,0,0
+458,"Clothing, Clothing Accessories, Shoe, and Jewelry Retailers",0,0,0,0,0,0
+459,"Sporting Goods, Hobby, Musical Instrument, Book, and Miscellaneous Retailers",0,0,0,0,0,0
+481,"Air Transportation",0,0,0,0,0,0
+482,"Rail Transportation",0,0,0,0,0,0
+483,"Water Transportation",0,0,0,0,0,0
+484,"Truck Transportation",0,0,0,0,0,0
+485,"Transit and Ground Passenger Transportation",0,0,0,0,0,0
+486,"Pipeline Transportation",0,0,0,0,0,0
+487,"Scenic and Sightseeing Transportation",0,0,0,0,0,0
+491,"Postal Service",0,0,0,0,0,0
+492,"Couriers and Messengers",0,0,0,0,0,0
+493,"Warehousing and Storage",0,0,0,0,0,0
+512,"Motion Picture and Sound Recording Industries",0,0,0,0,0,0
+513,"Publishing Industries",0,0,0,0,0,0
+516,"Broadcasting and Content Providers",0,0,0,0,0,0
+517,Telecommunications,0,0,0,0,0,0
+518,"Computing Infrastructure Providers, Data Processing, Web Hosting, and Related Services",0,0,0,0,0,0
+519,"Web Search Portals, Libraries, Archives, and Other Information Services",0,0,0,0,0,0
+521,"Monetary Authorities-Central Bank",0,0,0,0,0,0
+522,"Credit Intermediation and Related Activities",0,0,0,0,0,0
+523,"Securities, Commodity Contracts, and Other Financial Investments and Related Activities",0,0,0,0,0,0
+524,"Insurance Carriers and Related Activities",0,0,0,0,0,0
+525,"Funds, Trusts, and Other Financial Vehicles",0,0,0,0,0,0
+531,"Real Estate",0,0,0,0,0,0
+532,"Rental and Leasing Services",0,0,0,0,0,0
+533,"Lessors of Nonfinancial Intangible Assets (except Copyrighted Works)",0,0,0,0,0,0
+541,"Professional, Scientific, and Technical Services",0,0,0,0,0,0
+551,"Management of Companies and Enterprises",0,0,0,0,0,0
+611,"Educational Services",0,0,0,0,0,0
+622,Hospitals,0,0,0,0,0,0
+711,"Performing Arts, Spectator Sports, and Related Industries",0,0,0,0,0,0
+712,"Museums, Historical Sites, and Similar Institutions",0,0,0,0,0,0
+713,"Amusement, Gambling, and Recreation Industries",0,0,0,0,0,0
+721,Accommodation,0,0,0,0,0,0
+722,"Food Services and Drinking Places",0,0,0,0,0,0
+811,"Repair and Maintenance",0,0,0,0,0,0
+812,"Personal and Laundry Services",0,0,0,0,0,0
+814,"Private Households",0,0,0,0,0,0
+999,"Unclassified Industry",0,0,0,0,0,0
