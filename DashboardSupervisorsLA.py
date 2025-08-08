@@ -47,11 +47,13 @@ if uploaded_file is not None:
                     if col.lower().startswith("unique postings"):
                         df.rename(columns={col: "Unique Postings"}, inplace=True)
 
-                # Determine if it's a company or industry file based on actual columns
-                upper_cols = [c.upper() for c in df.columns]
-                if "COMPANY" in upper_cols:
+                # Check for presence of key columns
+                has_company = any(col.strip().lower() == "company" for col in df.columns)
+                has_industry = any(col.strip().lower() == "industry" for col in df.columns)
+
+                if has_company:
                     company_data.append(df)
-                elif "INDUSTRY" in upper_cols:
+                elif has_industry:
                     industry_data.append(df)
 
         if not company_data and not industry_data:
