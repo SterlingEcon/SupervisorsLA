@@ -39,7 +39,7 @@ if uploaded_file is not None:
                 occupation = re.sub(r'(_)?[a-f0-9]{16,}', '', occupation)  # remove hashes
                 occupation = occupation.replace('_', ' ').strip()
                 occupation = re.sub(r'\s+', ' ', occupation)
-                occupation = occupation.replace('LA', '').strip()
+                occupation = re.sub(r'\bLA$', '', occupation).strip()
                 df['Occupation'] = occupation
 
                 # Normalize column names
@@ -49,7 +49,7 @@ if uploaded_file is not None:
                         df.rename(columns={col: "Unique Postings"}, inplace=True)
 
                 has_company = any(col.strip().lower() == "company" for col in df.columns)
-                has_industry = any(col.strip().lower() == "industry" for col in df.columns)
+                has_industry = any(col.strip().lower() == "industry" or col.strip().lower() == "naics" for col in df.columns)
 
                 if has_company:
                     company_data.append(df)
@@ -81,11 +81,8 @@ if uploaded_file is not None:
             if matching_industry_dfs:
                 industry_df = pd.concat(matching_industry_dfs, ignore_index=True)
                 industry_col = next((c for c in industry_df.columns if c.strip().lower() == "industry"), None)
-                if industry_col and 'Unique Postings' in industry_df.columns:
-                    top_industries = industry_df.groupby(industry_col, as_index=False)['Unique Postings'].sum()
-                    top_industries = top_industries.sort_values("Unique Postings", ascending=False)
+                if industry_col:
                     st.subheader("🏭 Top Industries")
-                    st.dataframe(top_industries, use_container_width=True)
-                    st.bar_chart(top_industries.set_index(industry_col)["Unique Postings"].head(20))
+                    st.dataframe(industry_df[["NAICS", industry_col, "Occupation Jobs in Industry (2024)", "Occupation Jobs in Industry (2029)", "Change (2024 - 2029)", "% Change (2024 - 2029)", "% of Occupation in Industry (2024)", "% of Total Jobs in Industry (2024)"]], use_container_width=True)
 else:
     st.info("Please upload the `.tar.gz` file containing both company and industry CSVs.")
