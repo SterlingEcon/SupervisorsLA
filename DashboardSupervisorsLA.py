@@ -5,6 +5,7 @@ import io
 import glob
 import os
 import re
+import matplotlib.pyplot as plt
 
 st.set_page_config(page_title="Top Companies Hiring Supervisors - LA County", layout="wide")
 st.title("📊 Top Employers and Industries Hiring First-Line Supervisors in Los Angeles County")
@@ -13,6 +14,18 @@ This dashboard shows job postings from **August 2024 to July 2025** for top comp
 """)
 
 uploaded_file = st.file_uploader("Upload the tar.gz file from Lightcast:", type=["tar.gz"])
+
+default_data_path = "data/"  # adjust if you use a different folder
+
+if uploaded_file is None:
+    local_csvs = glob.glob(os.path.join(default_data_path, "*.csv"))
+    if local_csvs:
+        st.info("No file uploaded — using default data from repository.")
+        uploaded_file = io.BytesIO()
+        with tarfile.open(fileobj=uploaded_file, mode="w:gz") as tar:
+            for file_path in local_csvs:
+                tar.add(file_path, arcname=os.path.basename(file_path))
+        uploaded_file.seek(0)
 
 if uploaded_file is not None:
     import tarfile
@@ -64,6 +77,8 @@ if uploaded_file is not None:
 
             st.markdown(f"### 📌 {selected_occ}")
 
+            col1, col2 = st.columns([2, 3])
+
             # Show employers
             matching_company_dfs = [df for df in company_data if df['Occupation'].iloc[0] == selected_occ]
             if matching_company_dfs:
@@ -72,9 +87,20 @@ if uploaded_file is not None:
                 if company_col and 'Unique Postings' in company_df.columns:
                     top_companies = company_df.groupby(company_col, as_index=False)['Unique Postings'].sum()
                     top_companies = top_companies.sort_values("Unique Postings", ascending=False)
-                    st.subheader("🏢 Top Companies")
-                    st.dataframe(top_companies, use_container_width=True)
-                    st.bar_chart(top_companies.set_index(company_col)["Unique Postings"].head(20))
+
+                    with col1:
+                        st.subheader("🏢 Top Companies")
+                        fmt_df = top_companies.copy()
+                        fmt_df['Unique Postings'] = fmt_df['Unique Postings'].round(0).astype(int).map("{:,}".format)
+                        st.dataframe(fmt_df, use_container_width=True)
+
+                    with col2:
+                        st.subheader("📉 Unique Postings by Company")
+                        fig, ax = plt.subplots(figsize=(10, 6))
+                        ax.barh(top_companies[company_col], top_companies['Unique Postings'])
+                        ax.invert_yaxis()
+                        ax.set_xlabel("Unique Postings")
+                        st.pyplot(fig)
 
             # Show industries
             matching_industry_dfs = [df for df in industry_data if df['Occupation'].iloc[0] == selected_occ]
@@ -83,6 +109,19 @@ if uploaded_file is not None:
                 industry_col = next((c for c in industry_df.columns if c.strip().lower() == "industry"), None)
                 if industry_col:
                     st.subheader("🏭 Top Industries")
-                    st.dataframe(industry_df[["NAICS", industry_col, "Occupation Jobs in Industry (2024)", "Occupation Jobs in Industry (2029)", "Change (2024 - 2029)", "% Change (2024 - 2029)", "% of Occupation in Industry (2024)", "% of Total Jobs in Industry (2024)"]], use_container_width=True)
+                    st.dataframe(
+                        industry_df[[
+                            "NAICS",
+                            industry_col,
+                            "Occupation Jobs in Industry (2024)",
+                            "Occupation Jobs in Industry (2029)",
+                            "Change (2024 - 2029)",
+                            "% Change (2024 - 2029)",
+                            "% of Occupation in Industry (2024)",
+                            "% of Total Jobs in Industry (2024)"
+                        ]],
+                        use_container_width=True
+                    )
 else:
     st.info("Please upload the `.tar.gz` file containing both company and industry CSVs.")
+
