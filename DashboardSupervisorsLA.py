@@ -31,8 +31,21 @@ if uploaded_file is not None:
                 f = io.StringIO(content.decode('utf-8'))
                 df = pd.read_csv(f)
                 base_name = os.path.splitext(os.path.basename(member.name))[0]
-                occupation = base_name.replace('Job_Postings_Table_', '').replace('_in_Los_Angeles_County_CA', '').replace('_COMPANY', '').replace('_INDUSTRY', '').replace('_', ' ')
+
+                # Normalize occupation name from filename
+                occupation = base_name
+                occupation = occupation.replace('_in_Los_Angeles_County_CA', '')
+                occupation = occupation.replace('_Company', '').replace('_company', '').replace('_COMPANY', '')
+                occupation = occupation.replace('_Industry', '').replace('_industry', '').replace('_INDUSTRY', '')
+                occupation_parts = [part for part in occupation.split('_') if not (len(part) > 12 and part.isalnum())]
+                occupation = ' '.join(occupation_parts).strip()
                 df['Occupation'] = occupation
+
+                # Normalize column names
+                df.columns = [col.strip() for col in df.columns]
+                for col in df.columns:
+                    if col.lower().startswith("unique postings"):
+                        df.rename(columns={col: "Unique Postings"}, inplace=True)
 
                 if '_COMPANY' in base_name.upper():
                     company_data.append(df)
@@ -50,7 +63,7 @@ if uploaded_file is not None:
             # Show employers
             if company_data:
                 company_df = pd.concat([df for df in company_data if df['Occupation'].iloc[0] == selected_occ], ignore_index=True)
-                if 'Company' in company_df.columns:
+                if 'Company' in company_df.columns and 'Unique Postings' in company_df.columns:
                     top_companies = company_df.groupby('Company', as_index=False)['Unique Postings'].sum()
                     top_companies = top_companies.sort_values("Unique Postings", ascending=False)
                     st.subheader("🏢 Top Companies")
@@ -60,7 +73,7 @@ if uploaded_file is not None:
             # Show industries
             if industry_data:
                 industry_df = pd.concat([df for df in industry_data if df['Occupation'].iloc[0] == selected_occ], ignore_index=True)
-                if 'Industry' in industry_df.columns:
+                if 'Industry' in industry_df.columns and 'Unique Postings' in industry_df.columns:
                     top_industries = industry_df.groupby('Industry', as_index=False)['Unique Postings'].sum()
                     top_industries = top_industries.sort_values("Unique Postings", ascending=False)
                     st.subheader("🏭 Top Industries")
