@@ -5,7 +5,6 @@ import io
 import glob
 import os
 import re
-import matplotlib.pyplot as plt
 import tarfile
 
 st.set_page_config(page_title="Top Companies Hiring Supervisors - LA County", layout="wide")
@@ -76,8 +75,6 @@ if uploaded_file is not None:
 
             st.markdown(f"### 📌 {selected_occ}")
 
-            col1, col2 = st.columns([3, 2])
-
             # Show employers
             matching_company_dfs = [df for df in company_data if df['Occupation'].iloc[0] == selected_occ]
             if matching_company_dfs:
@@ -86,20 +83,10 @@ if uploaded_file is not None:
                 if company_col and 'Unique Postings' in company_df.columns:
                     top_companies = company_df.groupby(company_col, as_index=False)['Unique Postings'].sum()
                     top_companies = top_companies.sort_values("Unique Postings", ascending=False)
-
-                    with col1:
-                        st.subheader("📉 Unique Postings by Company")
-                        fig, ax = plt.subplots(figsize=(10, 20))
-                        ax.barh(top_companies[company_col], top_companies['Unique Postings'])
-                        ax.invert_yaxis()
-                        ax.set_xlabel("Unique Postings")
-                        st.pyplot(fig)
-
-                    with col2:
-                        st.subheader("🏢 Top Companies")
-                        fmt_df = top_companies.copy()
-                        fmt_df['Unique Postings'] = fmt_df['Unique Postings'].round(0).astype(int).map("{:,}".format)
-                        st.dataframe(fmt_df, use_container_width=True, height=800)
+                    st.subheader("🏢 Top Companies")
+                    fmt_df = top_companies.copy()
+                    fmt_df['Unique Postings'] = fmt_df['Unique Postings'].round(0).astype(int).map("{:,}".format)
+                    st.dataframe(fmt_df, use_container_width=True, height=800)
 
             # Show industries
             matching_industry_dfs = [df for df in industry_data if df['Occupation'].iloc[0] == selected_occ]
@@ -108,8 +95,12 @@ if uploaded_file is not None:
                 industry_col = next((c for c in industry_df.columns if c.strip().lower() == "industry"), None)
                 if industry_col:
                     st.subheader("🏭 Top Industries")
+                    fmt_industry_df = industry_df.copy()
+                    fmt_industry_df['Occupation Jobs in Industry (2024)'] = fmt_industry_df['Occupation Jobs in Industry (2024)'].astype(int).map("{:,}".format)
+                    fmt_industry_df['Occupation Jobs in Industry (2029)'] = fmt_industry_df['Occupation Jobs in Industry (2029)'].astype(int).map("{:,}".format)
+                    fmt_industry_df['Change (2024 - 2029)'] = fmt_industry_df['Change (2024 - 2029)'].astype(int).map("{:,}".format)
                     st.dataframe(
-                        industry_df[[
+                        fmt_industry_df[[
                             "NAICS",
                             industry_col,
                             "Occupation Jobs in Industry (2024)",
