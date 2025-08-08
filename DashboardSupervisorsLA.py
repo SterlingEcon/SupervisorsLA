@@ -89,7 +89,7 @@ if uploaded_file is not None:
 
                     with col1:
                         st.subheader("📉 Unique Postings by Company")
-                        fig, ax = plt.subplots(figsize=(10, 6))
+                        fig, ax = plt.subplots(figsize=(10, 20))
                         ax.barh(top_companies[company_col], top_companies['Unique Postings'])
                         ax.invert_yaxis()
                         ax.set_xlabel("Unique Postings")
@@ -99,7 +99,7 @@ if uploaded_file is not None:
                         st.subheader("🏢 Top Companies")
                         fmt_df = top_companies.copy()
                         fmt_df['Unique Postings'] = fmt_df['Unique Postings'].round(0).astype(int).map("{:,}".format)
-                        st.dataframe(fmt_df, use_container_width=True)
+                        st.dataframe(fmt_df, use_container_width=True, height=800)
 
             # Show industries
             matching_industry_dfs = [df for df in industry_data if df['Occupation'].iloc[0] == selected_occ]
