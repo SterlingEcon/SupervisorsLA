@@ -61,8 +61,9 @@ if uploaded_file is not None:
             st.markdown(f"### 📌 {selected_occ}")
 
             # Show employers
-            if company_data:
-                company_df = pd.concat([df for df in company_data if df['Occupation'].iloc[0] == selected_occ], ignore_index=True)
+            matching_company_dfs = [df for df in company_data if df['Occupation'].iloc[0] == selected_occ]
+            if matching_company_dfs:
+                company_df = pd.concat(matching_company_dfs, ignore_index=True)
                 if 'Company' in company_df.columns and 'Unique Postings' in company_df.columns:
                     top_companies = company_df.groupby('Company', as_index=False)['Unique Postings'].sum()
                     top_companies = top_companies.sort_values("Unique Postings", ascending=False)
@@ -71,8 +72,9 @@ if uploaded_file is not None:
                     st.bar_chart(top_companies.set_index("Company")["Unique Postings"].head(20))
 
             # Show industries
-            if industry_data:
-                industry_df = pd.concat([df for df in industry_data if df['Occupation'].iloc[0] == selected_occ], ignore_index=True)
+            matching_industry_dfs = [df for df in industry_data if df['Occupation'].iloc[0] == selected_occ]
+            if matching_industry_dfs:
+                industry_df = pd.concat(matching_industry_dfs, ignore_index=True)
                 if 'Industry' in industry_df.columns and 'Unique Postings' in industry_df.columns:
                     top_industries = industry_df.groupby('Industry', as_index=False)['Unique Postings'].sum()
                     top_industries = top_industries.sort_values("Unique Postings", ascending=False)
