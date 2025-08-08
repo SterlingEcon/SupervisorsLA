@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pandas as pd
 import zipfile
@@ -7,9 +6,9 @@ import glob
 import os
 
 st.set_page_config(page_title="Top Companies Hiring Supervisors - LA County", layout="wide")
-st.title("📊 Top Companies Hiring First-Line Supervisors in Los Angeles County")
+st.title("📊 Top Employers and Industries Hiring First-Line Supervisors in Los Angeles County")
 st.markdown("""
-This dashboard shows job postings from **August 2024 to July 2025** for top companies hiring across different supervisor occupations in Los Angeles County.
+This dashboard shows job postings from **August 2024 to July 2025** for top companies and industries hiring across different supervisor occupations in Los Angeles County.
 """)
 
 # --- Load the zip archive ---
@@ -17,33 +16,55 @@ uploaded_file = st.file_uploader("Upload the tar.gz file from Lightcast:", type=
 
 if uploaded_file is not None:
     import tarfile
+
     with tarfile.open(fileobj=uploaded_file, mode="r:gz") as tar:
         members = [m for m in tar.getmembers() if m.isfile() and m.name.endswith(".csv")]
-        all_data = []
+        company_data = []
+        industry_data = []
+
         for member in members:
             f = tar.extractfile(member)
             if f:
+                content = f.read()
+                if not content.strip():
+                    continue
+                f = io.StringIO(content.decode('utf-8'))
                 df = pd.read_csv(f)
-                df['Occupation'] = os.path.splitext(os.path.basename(member.name))[0]
-                df['Occupation'] = df['Occupation'].str.replace('Job_Postings_Table_', '').str.replace('_in_Los_Angeles_County_CA.*', '', regex=True).str.replace('_', ' ')
-                all_data.append(df)
+                base_name = os.path.splitext(os.path.basename(member.name))[0]
+                occupation = base_name.replace('Job_Postings_Table_', '').replace('_in_Los_Angeles_County_CA', '').replace('_COMPANY', '').replace('_INDUSTRY', '').replace('_', ' ')
+                df['Occupation'] = occupation
 
-        if not all_data:
-            st.warning("No CSVs found in the archive.")
+                if '_COMPANY' in base_name.upper():
+                    company_data.append(df)
+                elif '_INDUSTRY' in base_name.upper():
+                    industry_data.append(df)
+
+        if not company_data and not industry_data:
+            st.warning("No valid company or industry CSVs found in the archive.")
         else:
-            data = pd.concat(all_data, ignore_index=True)
-
-            # --- UI Controls ---
-            occs = sorted(data['Occupation'].unique())
+            occs = sorted(set([df['Occupation'].iloc[0] for df in company_data + industry_data]))
             selected_occ = st.selectbox("Choose an Occupation:", occs)
 
-            filtered = data[data['Occupation'] == selected_occ].copy()
-            filtered = filtered.sort_values("Unique Postings", ascending=False)
-
             st.markdown(f"### 📌 {selected_occ}")
-            st.dataframe(filtered[['Company', 'Unique Postings']], use_container_width=True)
 
-            st.bar_chart(filtered.set_index("Company")["Unique Postings"].head(20))
+            # Show employers
+            if company_data:
+                company_df = pd.concat([df for df in company_data if df['Occupation'].iloc[0] == selected_occ], ignore_index=True)
+                if 'Company' in company_df.columns:
+                    top_companies = company_df.groupby('Company', as_index=False)['Unique Postings'].sum()
+                    top_companies = top_companies.sort_values("Unique Postings", ascending=False)
+                    st.subheader("🏢 Top Companies")
+                    st.dataframe(top_companies, use_container_width=True)
+                    st.bar_chart(top_companies.set_index("Company")["Unique Postings"].head(20))
 
+            # Show industries
+            if industry_data:
+                industry_df = pd.concat([df for df in industry_data if df['Occupation'].iloc[0] == selected_occ], ignore_index=True)
+                if 'Industry' in industry_df.columns:
+                    top_industries = industry_df.groupby('Industry', as_index=False)['Unique Postings'].sum()
+                    top_industries = top_industries.sort_values("Unique Postings", ascending=False)
+                    st.subheader("🏭 Top Industries")
+                    st.dataframe(top_industries, use_container_width=True)
+                    st.bar_chart(top_industries.set_index("Industry")["Unique Postings"].head(20))
 else:
-    st.info("Please upload the `job_postings_top_companies_los_angeles.csvs.tar.gz` file to begin.")
+    st.info("Please upload the `.tar.gz` file containing both company and industry CSVs.")
